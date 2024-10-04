@@ -1,0 +1,84 @@
+<!DOCTYPE HTML>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DBP - Lista de Tareas</title>
+    <link rel="stylesheet" href="estilo.css">
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+
+        document.querySelector('#new-task').onsubmit = () => {
+
+          const cb = document.createElement('input');
+          cb.setAttribute('type', 'checkbox');
+
+          const li = document.createElement('li');
+          li.classList.add('task-item');
+
+          li.appendChild(cb);
+
+          const taskText = document.createElement('span');
+          taskText.classList.add('task-text');
+          taskText.textContent = document.querySelector('#task').value;
+          li.appendChild(taskText);
+
+          const removeButton = document.createElement('button');
+          removeButton.innerHTML = 'X';
+          removeButton.classList.add('remove-btn');
+
+          removeButton.onclick = function() {
+            li.remove();
+          };
+
+          li.appendChild(removeButton);
+
+          cb.onchange = function() {
+            taskText.classList.toggle('completed');
+          };
+
+          document.querySelector('#tasks').append(li);
+          document.querySelector('#task').value = '';
+
+          return false;
+        };
+
+        document.querySelector('#select-all').onclick = () => {
+          const checkboxes = document.querySelectorAll('#tasks input[type="checkbox"]');
+          const allChecked = Array.from(checkboxes).every(cb => cb.checked);
+
+          checkboxes.forEach(cb => {
+            cb.checked = !allChecked;
+            const taskText = cb.parentElement.querySelector('.task-text');
+            if (!allChecked) {
+              taskText.classList.add('completed');
+            } else {
+              taskText.classList.remove('completed');
+            }
+          });
+
+          document.querySelector('#select-all').innerHTML = allChecked ? 'Seleccionar Todo' : 'Deseleccionar Todo';
+        };
+      });
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <h1>Lista de Tareas</h1>
+      </header>
+      
+      <main>
+        <form id="new-task">
+          <input id="task" autocomplete="off" autofocus placeholder="Agregar Nueva Tarea" type="text" required>
+          <input type="submit" value="Agregar Tarea">
+        </form>
+
+        <ol id="tasks">
+        </ol>
+
+        <button id="select-all">Seleccionar Todo</button>
+      </main>
+    </div>
+  </body>
+</html>
